@@ -1,0 +1,2 @@
+agency_id,agency_official_name,agency_zip_number,agency_address,agency_president_pos,agency_president_name
+4430001050451,北海道中央バス株式会社,0478601,北海道小樽市色内１丁目８番６号,代表取締役社長,二階堂 恭仁

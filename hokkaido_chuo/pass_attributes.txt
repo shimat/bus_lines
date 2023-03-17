@@ -1,0 +1,1 @@
+pass_id,price,currency_type,pass_term
