@@ -3,6 +3,7 @@ import pandas as pd
 import pydeck
 import streamlit as st
 from routes import load_routes_definition, convert_routes_to_pathlayer
+#from ipywidgets import HTML
 
 st.title("Foo")
 
@@ -23,6 +24,7 @@ bus_stops = bus_stops.groupby("stop_name").agg({
     "stop_lat": np.mean,
     "stop_lon": np.mean,
 }).reset_index()
+bus_stops["tooltip"] = bus_stops["stop_name"]
 
 #route_names = pd.read_csv(
 #    "data/hokkaido_chuo/routes.txt",
@@ -31,8 +33,8 @@ bus_stops = bus_stops.groupby("stop_name").agg({
 routes = load_routes_definition()
 pathlayer_data = convert_routes_to_pathlayer(routes, bus_stops)
 
-st.write(routes)
-st.write(pathlayer_data)
+# st.write(routes)
+# st.write(pathlayer_data)
 
 bus_stops["icon_data"] = None
 icon_data_col = bus_stops.columns.get_loc("icon_data")
@@ -40,6 +42,10 @@ for i in bus_stops.index:
     bus_stops.iat[i, icon_data_col] = ICON_DATA
 
 st.write(bus_stops)
+
+def on_click():
+    print('Testing...')
+    st.write("TEST TEST")
 
 icon_layer = pydeck.Layer(
     type="IconLayer",
@@ -49,6 +55,7 @@ icon_layer = pydeck.Layer(
     get_size=4,
     size_scale=15,
     pickable=True,
+    on_click=on_click,
 )
 path_layer = pydeck.Layer(
     type="PathLayer",
@@ -65,15 +72,23 @@ deck = pydeck.Deck(
     layers=(icon_layer, path_layer),
     map_style="road",
     initial_view_state=pydeck.ViewState(
-        latitude=43.08984839132553,
-        longitude=141.27750554973517,
+        latitude=43.021416023920374,
+        longitude=141.403294639492,
         zoom=11,
         pitch=0,
     ),
     tooltip={
-        "text": "{stop_name}{name}",
+        "text": "{tooltip}",
         "style": {}
     })
+
+
+def filter_by_viewport(widget_instance, payload):
+    print(widget_instance, payload)
+
+
+#deck.deck_widget.on_click(filter_by_viewport)
+
 st.pydeck_chart(deck)
 
-#deck.to_html("out.html")
+# deck.to_html("out.html")
