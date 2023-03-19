@@ -55,10 +55,10 @@ path_layer = pydeck.Layer(
     data=pathlayer_data,
     pickable=True,
     get_color="color",
-    width_scale=20,
-    width_min_pixels=2,
+    width_scale=1,
+    width_min_pixels=5,
     get_path="path",
-    get_width=5,
+    get_width="width",
 )
 
 deck = pydeck.Deck(
@@ -70,7 +70,10 @@ deck = pydeck.Deck(
         zoom=11,
         pitch=0,
     ),
-    tooltip={"text": "{stop_name}{name}"})
+    tooltip={
+        "text": "{stop_name}{name}",
+        "style": {}
+    })
 st.pydeck_chart(deck)
 
 #deck.to_html("out.html")
